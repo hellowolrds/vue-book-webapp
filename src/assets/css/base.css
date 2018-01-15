@@ -53,11 +53,14 @@ html, body {
   height: 100%;
 }
 
-// 溢出隐藏
+
 .text-line-comm {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+.common {
+  padding-top: 40px;
 }

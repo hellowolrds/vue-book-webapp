@@ -3,10 +3,10 @@
 		h2 {{title}}
 		//- 男生和女生进行切换
 		nav.nav-group(v-if="$store.state.isShowSex")
-			h3.nav-item.active 男生
-			h3.nav-item 女生
+			h3.nav-item(:class="{active: sex==0}" @click="change(0)") 男生
+			h3.nav-item(:class="{active: sex==1}" @click="change(1)") 女生
 		.head-search 
-			a
+			router-link.search(to="/search")
 				i.iconfont.icon-sousuo-copy
 </template>
 <script>
@@ -14,12 +14,20 @@
 		name: 'topbar',
 		data () {
 			return {
-
+				sex: 0
 			}
 		},
 		computed: {
 			title () {
 				return this.$store.state.title
+			}
+		},
+		methods: {
+			change (sex) {
+				this.sex = sex;
+				this.$store.state.sex = sex;
+				// 向组件传值
+				this.$emit("bookList", sex);
 			}
 		}
 	}
@@ -64,4 +72,6 @@
 		display: inline-block
 		top: 12px
 		right: 15px
+		.search
+			color: #fff
 </style>

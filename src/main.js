@@ -9,6 +9,20 @@ import axios from 'axios'
 import store from './vuex/index.js'
 import './assets/css/base.css'
 import './assets/font/iconfont.css'
+// 导入mintUI
+import 'mint-ui/lib/style.css'
+import { Swipe, SwipeItem } from 'mint-ui'
+
+import moment from 'moment'
+
+Vue.component(Swipe.name, Swipe)
+Vue.component(SwipeItem.name, SwipeItem)
+
+// 注册全局日期过滤器
+Vue.filter('date', (value, formatString)=>{
+  formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+  return moment(value).format(formatString);
+})
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
