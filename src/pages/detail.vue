@@ -55,9 +55,13 @@
 						router-link(:to="{name:'detail', params:{id: data._id}}")
 							img.cover(:src="staticUrl + data.cover" :alt="data.title")
 							p {{data.title}}
+			//- 导入bookbar
+			book-bar(:bookId="book._id" @add="add")
 </template>
 <script>
 import api from '../fetch/index.js';
+// bookbar
+import BookBar from '../components/bookbar.vue';
 	export default {
 		name: 'detail',
 		data () {
@@ -68,7 +72,7 @@ import api from '../fetch/index.js';
 					_id: 0
 				},
 				reviewList: '',
-				recommend: ''
+				recommend: '',
 			}
 		},
 		created () {
@@ -93,13 +97,20 @@ import api from '../fetch/index.js';
 					this.recommend = data.data.books.slice(0, 4);
 				})
 			},
+			// 添加书架
+			add () {
+				var bookcase = this.$store.state.bookcase;
+				bookcase.push(this.book);
+				var str = JSON.stringify(bookcase)
+				localStorage.setItem('bookList', str);
+			},
 			// 返回上一级
 			revert () {
 				this.$router.back(-1)
 			}
 		},
 		components: {
-			
+			BookBar
 		}
 	}
 </script>

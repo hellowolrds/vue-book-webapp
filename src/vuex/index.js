@@ -16,7 +16,9 @@ var store = new Vuex.Store({
 		// 默认显示男生书籍
 		sex: 0,
 		// 保存搜索记录
-		searchList: []
+		searchList: [],
+		// 保存书架内容
+		bookcase: []
 	},
 	mutations: {
 		// 改变标题

@@ -89,6 +89,10 @@ async function getChapters (id) {
 			}})
 		});
 }
+// 加载当前章节内容
+async function getChapterContent (id) {
+	return axios.get('/chapterapi/chapter/'+id, {params: {cv: '1495097622174'}});
+}
 export default {
 	getBanner,
 	getBestBook,
@@ -104,5 +108,6 @@ export default {
 	getCategory,
 	getCatBooks,
 	getMinorList,
-	getChapters
+	getChapters,
+	getChapterContent
 }

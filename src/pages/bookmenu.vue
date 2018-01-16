@@ -1,5 +1,5 @@
 <template lang="pug">
-	section.more
+	section.more(v-if="isShow")
 		header.topbar
 			span
 				a(@click="$router.back(-1)")
@@ -13,12 +13,20 @@
 			.chapter-list-section
 				.chapter-bar 正文卷
 				ul.chapter-list
-					li.chapter-item(v-for="item in book.chapters")
+					li.chapter-item(v-for="(item, index) in book.chapters" @click="enterContent(item.id, index)")
 						p {{item.title}}
 							span.vip(v-if="item.isVip")
 								i.iconfont.icon-suo
 
-			
+	section.content(v-else)
+		h4 {{book.bookName}}
+		.content-list(v-for="chapter in contentList")
+			h3 {{chapter.title}}
+			div(v-if="!chapter.isVip")
+				p(v-for="data in chapter.cpContent") {{data}}
+			div(v-if="chapter.isVip")
+				p vip章节请到正版网站观看
+		button.nextChapter(@click="more()") 加载下一章	
 </template>
 <script>
 import api from '../fetch/index.js';
@@ -28,20 +36,41 @@ import api from '../fetch/index.js';
 			return {
 				bookId: '',
 				book: {},
-				sort: true
+				sort: true,
+				isShow: true,
+				contentList: [],
+				index: 0
 			}
 		},
 		created () {
 			this.bookId = this.$route.params.id;
 			api.getChapters(this.bookId).then(res=>{
-				console.log(res);
 				this.book = res.data;
+				console.log(this.book)
 			})
 		},
 		methods: {
 			change () {
 				this.sort = !this.sort;
 				this.book.chapters.reverse();
+			},
+			enterContent (id, index) {
+				this.isShow = false;
+				this.index = index;
+				console.log(this.index)
+				this.getData(id);
+			},
+			// 加载下一章
+			more () {
+				var id = this.book.chapters[this.index++].id;
+				this.getData(id);
+			},
+			getData (id) {
+				api.getChapterContent(id).then(data=>{
+					console.log(data);
+					data.data.chapter.cpContent = data.data.chapter.cpContent.split('\n')
+					this.contentList.push(data.data.chapter);
+				})
 			}
 		},
 		components: {
@@ -111,6 +140,45 @@ import api from '../fetch/index.js';
 					i 
 						color: #ed424b
 						font-size: 14px
+
+.content
+	background-color: #c4b395
+	height: 100%
+	overflow-y: scroll
+	h4
+		font-size: 12px
+		color: #666
+		font-weight: 400
+		position: fixed
+		top: 0
+		left: 0
+		right: 0
+		line-height: 30px
+		padding-left: 15px
+		z-index: 9
+		background-color: #c4b395
+	.content-list
+		position: relative
+		h3
+			padding: 30px 0 20px 10px
+			font-size: 20px
+		p
+			text-indent: 2em
+			margin: .5em 0
+			line-height: 1.8
+	.nextChapter
+		display: block
+		margin: 15px auto
+		width: 80%
+		font-size: 16px
+		line-height: 36px
+		border: 0 none
+		border-radius: 100px
+		color: #fff
+		background-color: #ed424b
+		z-index: 999
+		outline: 0 none
+	
 
 	
 </style>
